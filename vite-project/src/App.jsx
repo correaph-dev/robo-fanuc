@@ -5,7 +5,6 @@ export default function App() {
   const [logs, setLogs] = useState([]);
   const [dadosrobo, setDadosrobo] = useState(null);
   const [conectado, setConectado] = useState(false);
-  const [podeLogarRobo, setPodeLogarRobo] = useState(false);
 
   const adicionarLog = (mensagem) => {
     const agora = new Date();
@@ -17,24 +16,15 @@ export default function App() {
     setLogs((prevLogs) => [...prevLogs, novoLog]);
   };
 
-  useEffect(() => {
-    const eventSource = new EventSource("http://127.0.0.1:1880/events");
+ useEffect(() => {
+    const eventSource = new EventSource("http://localhost:3001/events");
 
     eventSource.onopen = () => {
       setConectado(true);
-      
-  //logs
       adicionarLog("Conexão estabelecida com o Node-RED");
-      
       setTimeout(() => {
-        adicionarLog("Início do programa");
-      }, 1000); 
-
-      setTimeout(() => {
-        adicionarLog("Processando dados...");
-     // liberar o log do robo
-        setPodeLogarRobo(true);
-      }, 2500); 
+        adicionarLog("Sistema pronto.");
+      }, 1500); 
     };
 
     eventSource.onmessage = (event) => {
@@ -42,8 +32,7 @@ export default function App() {
         const data = JSON.parse(event.data);
         setDadosrobo(data);
 
-      //verificar se o log do robo pode ser adicionado
-        if (data.status_robo && podeLogarRobo) {
+        if (data.status_robo) {
           adicionarLog(data.status_robo);
         }
       } catch (e) {
@@ -51,9 +40,13 @@ export default function App() {
       }
     };
 
-    eventSource.onerror = () => setConectado(false);
+    eventSource.onerror = () => {
+      setConectado(false);
+      adicionarLog("Erro: Conexão perdida.");
+    };
+
     return () => eventSource.close();
-  }, [podeLogarRobo]); // adicionamos a trava aqui para o useEffect monitorar
+  }, []);
 
   return (
     <div className="container">
@@ -61,13 +54,14 @@ export default function App() {
       <div className="linha"></div>
 
       <div className="layout">
+        {/* Coluna Esquerda: Informações Técnicas */}
         <div className="left">
           <div className="card">
             <h3>Tempo de Ciclo (s)</h3>
             <p className="big">{dadosrobo?.tempo || "3.2"}<span>s</span></p>
           </div>
-  <div className="card1">
-
+          
+          <div className="card1">
             <h3>Status</h3>
             <div className="status-item">
               <span>Estável</span>
@@ -89,8 +83,7 @@ export default function App() {
           </div>
         </div>
 
-
-
+        {/* Coluna Central: Identificação do Robô */}
         <div className="center">
           <div className="robot-display">
             <div className="dot67">
@@ -102,6 +95,7 @@ export default function App() {
           </div>
         </div>
 
+        {/* Coluna Direita: Terminal de Mensagens */}
         <div className="right">
           <div className="log-container">
             <h4>LOGS DO ROBÔ</h4>
@@ -119,4 +113,4 @@ export default function App() {
       </div>
     </div>
   );
-}
+} 

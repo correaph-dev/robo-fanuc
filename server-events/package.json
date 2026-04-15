@@ -1,0 +1,30 @@
+{
+  "name": "server-events",
+  "version": "1.0.0",
+  "description": "Servidor de Eventos para comunicação node-red",
+  "keywords": [
+    "express",
+    "javascript",
+    "rest"
+  ],
+  "homepage": "https://github.com/alimadeoliveiranatalia/supervisorio_lab2#readme",
+  "bugs": {
+    "url": "https://github.com/alimadeoliveiranatalia/supervisorio_lab2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alimadeoliveiranatalia/supervisorio_lab2.git"
+  },
+  "license": "ISC",
+  "author": "Natália Lima de Oliveira",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"teste\"",
+    "star": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
